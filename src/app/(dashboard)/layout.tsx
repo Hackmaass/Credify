@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { motion, AnimatePresence } from "framer-motion";
 
 const sidebarItems = [
@@ -163,6 +164,7 @@ export default function DashboardLayout({
           </div>
           
           <div className="flex items-center gap-6">
+            <ThemeToggle className="text-white/20 hover:text-white hover:bg-white/[0.03] w-11 h-11" />
             <Button variant="ghost" size="icon" className="text-white/20 hover:text-white hover:bg-white/[0.03] relative w-11 h-11 rounded-xl">
               <Bell className="w-5 h-5" />
               <span className="absolute top-3 right-3 w-2 h-2 bg-white rounded-full border-2 border-black" />

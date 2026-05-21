@@ -159,6 +159,13 @@
   padding: 2rem;
 }
 
+.dark .login-page {
+  background-color: #0A0A0A;
+  background-image:
+    radial-gradient(at 20% 0%, rgba(255, 228, 196, 0.05) 0%, transparent 60%),
+    radial-gradient(at 80% 100%, rgba(219, 234, 254, 0.05) 0%, transparent 60%);
+}
+
 .login-bg-shape {
   position: absolute;
   border-radius: 50%;
@@ -211,6 +218,11 @@
     0 24px 60px rgba(0, 0, 0, 0.03);
 }
 
+.dark .login-card {
+  background: rgba(20, 20, 20, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .login-logo-link {
   text-decoration: none;
   margin-bottom: 2rem;
@@ -254,6 +266,10 @@
   margin-bottom: 0.625rem;
 }
 
+.dark .login-title {
+  color: #F3F4F4;
+}
+
 .login-subtitle {
   font-family: var(--font-geist-sans), 'Inter', -apple-system, sans-serif;
   font-size: 1rem;
@@ -261,6 +277,10 @@
   color: rgba(0, 0, 0, 0.42);
   line-height: 1.5;
   letter-spacing: -0.01em;
+}
+
+.dark .login-subtitle {
+  color: rgba(255, 255, 255, 0.42);
 }
 
 .login-actions {
@@ -302,6 +322,15 @@
   box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.1),
     0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.dark .login-google-btn {
+  background: #F3F4F4;
+  color: #111;
+}
+
+.dark .login-google-btn:hover:not(:disabled) {
+  background: #FFF;
 }
 
 .login-google-btn:active:not(:disabled) {
@@ -358,6 +387,10 @@
   line-height: 1.6;
   letter-spacing: -0.005em;
   max-width: 280px;
+}
+
+.dark .login-footer {
+  color: rgba(255, 255, 255, 0.28);
 }
 
 .login-bottom {
@@ -445,6 +478,11 @@
   --muted-foreground: oklch(0.5 0 0);
   --accent: oklch(0.96 0 0);
   --accent-foreground: oklch(0.2 0 0);
+}
+
+.dark .oku-landing-page {
+  background-color: #0A0A0A;
+  color: #F3F4F4;
 }
 
 .oku-font-serif {
