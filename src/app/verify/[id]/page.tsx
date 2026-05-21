@@ -13,10 +13,11 @@ import {
   Fingerprint,
   QrCode,
   Hexagon,
-  Share2
+  Share2,
+  ArrowRight
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useParams } from "next/navigation";
@@ -26,19 +27,19 @@ const getCertificateData = (id: string) => {
   return {
     id: id || "CRED-782-X92",
     course: "Full-Stack React Development",
-    recipient: "Alex Chen",
-    issuer: "Credify Education",
-    date: "May 12, 2026",
+    recipient: "ALEX CHEN",
+    issuer: "CREDIFY PROTOCOL",
+    date: "MAY 12, 2026",
     hours: 42,
     score: 98,
-    blockchain: "Polygon Mainnet",
+    blockchain: "POLYGON NETWORK",
     hash: "0x7a2...f4e1",
     nftId: "#8821",
     status: "Verified",
     trustScore: 99.4,
     metadata: {
       type: "ERC-721",
-      standard: "Credify-V2",
+      standard: "CREDIFY-V2",
       minted: "2026-05-12T14:22:01Z"
     }
   };
@@ -49,93 +50,98 @@ export default function VerificationPage() {
   const cert = getCertificateData(params.id as string);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-white selection:bg-blue-500/30 overflow-x-hidden relative">
-      {/* Background glow effects */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[120px] rounded-full -z-10" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[120px] rounded-full -z-10" />
+    <div className="min-h-screen bg-black text-white selection:bg-white/10 overflow-x-hidden relative mesh-gradient">
+      {/* Ambient Glows */}
+      <div className="ambient-glow top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-500/5 blur-[150px]" />
+      <div className="ambient-glow bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-purple-500/5 blur-[150px]" />
 
-      <div className="max-w-4xl mx-auto px-6 py-12 md:py-24">
+      <div className="max-w-6xl mx-auto px-8 py-20 md:py-32">
         {/* Verification Status Header */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-4 mb-12"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center space-y-8 mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-2">
-            <CheckCircle2 className="w-4 h-4" />
-            <span className="text-sm font-semibold uppercase tracking-wider">Authenticity Verified</span>
+          <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full premium-glass border-white/5 text-emerald-500 mb-4">
+            <CheckCircle2 className="w-5 h-5" />
+            <span className="text-xs font-black uppercase tracking-[0.3em]">AUTHENTICITY SECURED</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gradient">
-            Credential Verification
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-white leading-none text-glow uppercase">
+            PROTOCOL <br />VERIFICATION
           </h1>
-          <p className="text-muted-foreground max-w-lg mx-auto">
-            Official blockchain-backed proof of educational achievement issued by Credify.
+          <p className="text-xl text-white/40 max-w-2xl mx-auto font-medium leading-relaxed">
+            Official decentralized proof of achievement issued via the Credify Protocol.
           </p>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-12">
+        <div className="grid gap-12 lg:grid-cols-12 items-start">
           {/* Main Certificate Card */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="md:col-span-7"
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-8"
           >
-            <Card className="relative overflow-hidden border-white/10 bg-white/[0.02] backdrop-blur-2xl p-1">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500" />
-              <CardHeader className="text-center pb-8 pt-10">
-                <div className="flex justify-center mb-6">
+            <Card className="relative overflow-hidden p-1 group">
+              <div className="absolute inset-0 bg-white/[0.02] group-hover:bg-white/[0.04] transition-colors duration-1000" />
+              <CardHeader className="text-center pb-12 pt-16">
+                <div className="flex justify-center mb-10">
                   <div className="relative">
-                    <Hexagon className="w-24 h-24 text-blue-500/20 fill-blue-500/5" strokeWidth={1} />
-                    <Award className="absolute inset-0 m-auto w-10 h-10 text-blue-400" />
+                    <div className="flex h-32 w-32 items-center justify-center rounded-[40px] bg-white/[0.03] border border-white/[0.05] shadow-2xl">
+                      <Hexagon className="w-16 h-16 text-white/10" strokeWidth={0.5} />
+                      <Award className="absolute w-12 h-12 text-white" />
+                    </div>
                     <motion.div 
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                      className="absolute inset-0 border-2 border-dashed border-blue-500/20 rounded-full"
+                      transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                      className="absolute -inset-6 border border-dashed border-white/5 rounded-full"
                     />
                   </div>
                 </div>
-                <CardTitle className="text-2xl md:text-3xl font-bold text-white mb-2">
+                <CardTitle className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter leading-none">
                   {cert.course}
                 </CardTitle>
-                <CardDescription className="text-blue-400 font-medium">
-                  {cert.issuer}
+                <CardDescription className="text-white/20 font-black uppercase tracking-[0.4em] text-xs">
+                  ISSUED BY {cert.issuer}
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="space-y-8 pb-10">
-                <div className="flex flex-col items-center justify-center space-y-1 py-4 border-y border-white/5">
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Presented To</span>
-                  <span className="text-xl font-semibold text-white uppercase tracking-tight">{cert.recipient}</span>
+              <CardContent className="space-y-12 pb-16 px-12">
+                <div className="flex flex-col items-center justify-center space-y-3 py-10 border-y border-white/[0.03]">
+                  <span className="text-[10px] text-white/20 font-black uppercase tracking-[0.5em]">RECIPIENT NODE</span>
+                  <span className="text-3xl font-black text-white tracking-tighter">{cert.recipient}</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 px-4">
-                  <div className="space-y-1">
-                    <span className="text-[10px] text-muted-foreground uppercase flex items-center gap-1">
-                      <Calendar className="w-3 h-3" /> Issue Date
+                <div className="grid grid-cols-2 gap-12">
+                  <div className="space-y-3">
+                    <span className="text-[10px] text-white/20 font-black uppercase tracking-[0.3em] flex items-center gap-2">
+                      <Calendar className="w-4 h-4" /> ISSUE DATE
                     </span>
-                    <p className="text-sm font-medium text-white">{cert.date}</p>
+                    <p className="text-lg font-bold text-white tracking-tight">{cert.date}</p>
                   </div>
-                  <div className="space-y-1 text-right">
-                    <span className="text-[10px] text-muted-foreground uppercase flex items-center gap-1 justify-end">
-                      <Fingerprint className="w-3 h-3" /> Credential ID
+                  <div className="space-y-3 text-right">
+                    <span className="text-[10px] text-white/20 font-black uppercase tracking-[0.3em] flex items-center gap-2 justify-end">
+                      <Fingerprint className="w-4 h-4" /> PROTOCOL ID
                     </span>
-                    <p className="text-sm font-mono text-white">{cert.id}</p>
+                    <p className="text-lg font-bold text-white font-mono tracking-tighter">{cert.id}</p>
                   </div>
                 </div>
               </CardContent>
 
-              <CardFooter className="bg-white/5 flex items-center justify-between p-6">
-                <div className="flex items-center gap-3">
-                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <CardFooter className="bg-white/[0.02] flex items-center justify-between p-12 py-8 border-t border-white/[0.03]">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                    <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                  </div>
                   <div className="text-left">
-                    <p className="text-[10px] text-muted-foreground uppercase font-bold">Trust Score</p>
-                    <p className="text-sm font-bold text-emerald-400">{cert.trustScore}% Secure</p>
+                    <p className="text-[10px] text-white/20 font-black uppercase tracking-[0.3em]">TRUST SCORE</p>
+                    <p className="text-lg font-black text-emerald-400 tracking-tight">{cert.trustScore}% SECURE</p>
                   </div>
                 </div>
-                <Button variant="ghost" className="h-9 gap-2 text-muted-foreground hover:text-white hover:bg-white/5">
-                  <Share2 className="w-4 h-4" />
-                  Share
+                <Button variant="ghost" className="h-12 px-6 gap-3 group/btn">
+                  <Share2 className="w-5 h-5 transition-transform group-hover/btn:rotate-12" />
+                  SHARE PROOF
                 </Button>
               </CardFooter>
             </Card>
@@ -143,69 +149,70 @@ export default function VerificationPage() {
 
           {/* Verification Sidebar */}
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="md:col-span-5 space-y-6"
+            transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-4 space-y-10"
           >
             {/* Blockchain Proof */}
-            <Card className="border-white/5 bg-white/[0.03] backdrop-blur-xl">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-white flex items-center gap-2">
-                  <Database className="w-4 h-4 text-blue-400" />
-                  Blockchain Proof
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xs font-black text-white/20 uppercase tracking-[0.4em] flex items-center gap-3">
+                  <Database className="w-4 h-4" />
+                  BLOCKCHAIN PROOF
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-3 rounded-lg bg-black/40 border border-white/5 space-y-3">
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className="text-muted-foreground">Network</span>
-                    <span className="text-white font-medium">{cert.blockchain}</span>
+              <CardContent className="space-y-6">
+                <div className="p-6 rounded-[24px] bg-white/[0.02] border border-white/[0.03] space-y-5">
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                    <span className="text-white/20">NETWORK</span>
+                    <span className="text-white">{cert.blockchain}</span>
                   </div>
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className="text-muted-foreground">Transaction Hash</span>
-                    <span className="text-blue-400 font-mono">{cert.hash}</span>
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                    <span className="text-white/20">HASH</span>
+                    <span className="text-blue-400 font-mono tracking-tighter">{cert.hash}</span>
                   </div>
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className="text-muted-foreground">NFT Token</span>
-                    <span className="text-white font-mono">{cert.nftId}</span>
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                    <span className="text-white/20">ASSET ID</span>
+                    <span className="text-white font-mono tracking-tighter">{cert.nftId}</span>
                   </div>
                 </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-9 text-xs">
-                  <ExternalLink className="w-3.5 h-3.5 mr-2" />
-                  View on Explorer
+                <Button className="w-full h-14 bg-white text-black hover:bg-white/90 text-[11px] font-black uppercase tracking-widest rounded-2xl">
+                  <ExternalLink className="w-4 h-4 mr-3" />
+                  VIEW ON EXPLORER
                 </Button>
               </CardContent>
             </Card>
 
             {/* Issuer Verification */}
-            <Card className="border-white/5 bg-white/[0.03] backdrop-blur-xl">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-white flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  Issuer Status
+            <Card>
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xs font-black text-white/20 uppercase tracking-[0.4em] flex items-center gap-3">
+                  <ShieldCheck className="w-4 h-4" />
+                  ISSUER STATUS
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                    <User className="w-5 h-5 text-emerald-400" />
+                <div className="flex items-center gap-5 p-5 rounded-[24px] bg-emerald-500/[0.03] border border-emerald-500/10">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+                    <User className="w-7 h-7 text-emerald-400" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white uppercase tracking-tight">Verified Issuer</p>
-                    <p className="text-[10px] text-muted-foreground">Credify Education Authority</p>
+                    <p className="text-xs font-black text-white uppercase tracking-widest mb-1">VERIFIED ISSUER</p>
+                    <p className="text-[10px] font-bold text-white/20 uppercase tracking-tighter">CREDIFY AUTHORITY</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* QR Verification */}
-            <div className="p-6 rounded-xl border border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent flex flex-col items-center gap-4">
-              <div className="p-4 bg-white rounded-xl">
-                <QrCode className="w-20 h-20 text-black" />
+            <div className="p-10 rounded-[40px] premium-glass border-white/[0.05] flex flex-col items-center gap-8 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-white/[0.02] group-hover:bg-white/[0.05] transition-colors duration-700" />
+              <div className="p-6 bg-white rounded-[32px] shadow-2xl relative z-10 transition-transform duration-700 group-hover:scale-105">
+                <QrCode className="w-24 h-24 text-black" />
               </div>
-              <p className="text-[10px] text-muted-foreground text-center px-4 leading-relaxed">
-                Scan this code to verify this credential on any mobile device.
+              <p className="text-[11px] font-black text-white/20 uppercase tracking-[0.3em] text-center leading-relaxed relative z-10">
+                OFFICIAL QR <br />AUTHENTICATION
               </p>
             </div>
           </motion.div>
@@ -215,16 +222,16 @@ export default function VerificationPage() {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-12 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground"
+          transition={{ duration: 1, delay: 0.6 }}
+          className="mt-32 pt-16 border-t border-white/[0.05] flex flex-col md:flex-row justify-between items-center gap-8 text-white/10"
         >
-          <div className="flex items-center gap-2 text-xs">
-            <LinkIcon className="w-3 h-3" />
-            <span>Permanent URL: credify.app/verify/{cert.id}</span>
+          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em]">
+            <LinkIcon className="w-4 h-4" />
+            <span>IMMUTABLE URL: CREDIFY.APP/VERIFY/{cert.id}</span>
           </div>
-          <div className="flex items-center gap-6 text-xs uppercase tracking-widest font-semibold">
-            <span>Powered by Credify</span>
-            <span>Web3 Secured</span>
+          <div className="flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.4em]">
+            <span>POWERED BY CREDIFY</span>
+            <span>WEB3 SECURED</span>
           </div>
         </motion.div>
       </div>

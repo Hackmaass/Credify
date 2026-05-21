@@ -31,33 +31,32 @@ export function StatsCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
+      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      className="group"
     >
-      <Card className={cn("overflow-hidden border-white/5 bg-white/[0.03] backdrop-blur-xl", className)}>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
+      <Card className={cn("overflow-hidden premium-glass border-white/[0.03] group-hover:bg-white/[0.05] transition-all duration-500", className)}>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
             {title}
           </CardTitle>
-          <div className="rounded-lg bg-white/5 p-2">
-            <Icon className="h-4 w-4 text-white" />
+          <div className="rounded-xl bg-white/[0.03] p-2.5 group-hover:bg-white group-hover:text-black transition-all duration-500">
+            <Icon className="h-5 w-5" />
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold tracking-tight text-white">{value}</div>
+          <div className="text-4xl font-black tracking-tighter text-white mb-2">{value}</div>
           {(description || trend) && (
-            <div className="mt-1 flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {trend && (
-                <span
-                  className={cn(
-                    "text-xs font-medium",
-                    trend.isPositive ? "text-emerald-400" : "text-rose-400"
-                  )}
-                >
-                  {trend.isPositive ? "+" : "-"}{trend.value}
-                </span>
+                <div className={cn(
+                  "px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider",
+                  trend.isPositive ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
+                )}>
+                  {trend.isPositive ? "↑" : "↓"} {trend.value}
+                </div>
               )}
               {description && (
-                <span className="text-xs text-muted-foreground">
+                <span className="text-[11px] font-bold text-white/20 uppercase tracking-widest">
                   {description}
                 </span>
               )}
@@ -65,7 +64,7 @@ export function StatsCard({
           )}
         </CardContent>
         {/* Decorative background glow */}
-        <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/5 blur-3xl" />
+        <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/[0.02] blur-3xl group-hover:bg-white/[0.05] transition-colors" />
       </Card>
     </motion.div>
   );

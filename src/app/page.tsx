@@ -1,435 +1,464 @@
 "use client";
 
-import React, { ElementType } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { 
   ShieldCheck, 
   ArrowRight, 
-  Play, 
-  Youtube, 
-  BarChart3, 
-  Zap, 
-  Globe, 
-  Fingerprint,
-  ChevronRight,
-  Download
+  ExternalLink, 
+  Menu, 
+  X,
+  ChevronRight
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
-// --- Components ---
-
-const Navbar = () => (
-  <motion.header 
-    initial={{ y: -20, opacity: 0 }}
-    animate={{ y: 0, opacity: 1 }}
-    className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 backdrop-blur-md border-b border-white/5 bg-background/50"
+// --- Wave Component ---
+const Wave = ({ className }: { className?: string }) => (
+  <svg 
+    fill="none" 
+    height="120" 
+    viewBox="0 0 1440 120" 
+    width="1440" 
+    className={className}
   >
-    <Link href="/" className="flex items-center gap-2 group">
-      <div className="relative w-8 h-8 bg-white rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
-        <ShieldCheck className="text-black w-5 h-5" />
-        <div className="absolute inset-0 bg-white/20 blur-lg rounded-full animate-glow" />
-      </div>
-      <span className="font-bold text-xl tracking-tight text-white">Credify</span>
-    </Link>
-    
-    <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-white/50">
-      {["Features", "Proof of Learning", "Verification", "Pricing"].map((item) => (
-        <Link 
-          key={item} 
-          href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} 
-          className="hover:text-white transition-colors relative group"
-        >
-          {item}
-          <span className="absolute -bottom-1 left-0 w-0 h-px bg-white transition-all group-hover:w-full" />
-        </Link>
-      ))}
-    </nav>
-
-    <div className="flex items-center gap-4">
-      <Link href="/dashboard" className="hidden sm:block text-sm font-medium text-white/50 hover:text-white transition-colors">
-        Dashboard
-      </Link>
-      <Button className="bg-white text-black hover:bg-white/90 rounded-full px-6 text-sm font-bold shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-        Get Started
-      </Button>
-    </div>
-  </motion.header>
+    <clipPath id="wave">
+      <path d="m0 0h1440v120h-1440z" />
+    </clipPath>
+    <g clipPath="url(#wave)">
+      <ellipse cx="720" cy="-600" fill="currentColor" rx="1316" ry="720" />
+    </g>
+  </svg>
 );
-
-const SectionHeader = ({ title, subtitle, badge }: { title: string; subtitle: string; badge?: string }) => (
-  <div className="flex flex-col items-center text-center space-y-4 mb-16">
-    {badge && (
-      <Badge variant="outline" className="bg-white/5 border-white/10 text-white/70 uppercase tracking-widest px-3 py-1 rounded-full text-[10px] font-bold">
-        {badge}
-      </Badge>
-    )}
-    <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gradient max-w-2xl">
-      {title}
-    </h2>
-    <p className="text-white/50 text-lg max-w-xl leading-relaxed">
-      {subtitle}
-    </p>
-  </div>
-);
-
-interface FeatureCardProps {
-  icon: ElementType;
-  title: string;
-  description: string;
-  delay?: number;
-}
-
-const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: FeatureCardProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay, duration: 0.5 }}
-    className="group relative p-8 rounded-3xl glass transition-all hover:bg-white/10"
-  >
-    <div className="absolute inset-0 bg-linear-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
-    <div className="relative z-10 space-y-4">
-      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-        <Icon className="w-6 h-6" />
-      </div>
-      <h3 className="text-xl font-bold text-white">{title}</h3>
-      <p className="text-white/50 leading-relaxed text-sm">
-        {description}
-      </p>
-    </div>
-  </motion.div>
-);
-
-// --- Main Page ---
 
 export default function LandingPage() {
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-white overflow-x-hidden selection:bg-white/10">
-      <Navbar />
+    <div className="oku-landing-page min-h-screen relative overflow-x-hidden text-black bg-[#FAF9F7]">
+      
+      {/* Floating Navbar */}
+      <header className={`fixed top-0 left-0 right-0 h-20 z-50 transition-all duration-300 flex items-center justify-center ${scrolled ? 'bg-[#FAF9F7]/95 border-b border-[#E8E8E9] shadow-sm backdrop-blur-md' : 'bg-transparent'}`}>
+        <div className="w-full max-w-5xl mx-auto px-6 flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center transition-transform group-hover:scale-105 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+              <ShieldCheck className="text-white w-4.5 h-4.5" />
+            </div>
+            <span className="font-bold text-xl tracking-tight text-black">Credify</span>
+          </Link>
+
+          {/* Desktop Nav Links */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#46474E]">
+            <Link href="#features" className="hover:text-black transition-colors">Explore</Link>
+            <Link href="#import" className="hover:text-black transition-colors">Integrations</Link>
+            <Link href="#team" className="hover:text-black transition-colors">Team</Link>
+            <Link href="https://twitter.com/credify" target="_blank" className="hover:text-black transition-colors flex items-center gap-1">
+              Twitter <ExternalLink className="w-3 h-3" />
+            </Link>
+            <Link href="mailto:support@credify.so" className="hover:text-black transition-colors">Contact</Link>
+          </nav>
+
+          {/* Right Action Buttons */}
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="/login" className="text-sm font-medium text-[#46474E] hover:text-black transition-colors">
+              Sign in
+            </Link>
+            <Link href="/login">
+              <button className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-neutral-800 transition-all shadow-xs hover:-translate-y-0.5 active:translate-y-0">
+                Join
+              </button>
+            </Link>
+          </div>
+
+          {/* Mobile Burger Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-black hover:opacity-80 transition-opacity"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Slide-over Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-[#FAF9F7] flex flex-col p-6 pt-24 md:hidden">
+          <nav className="flex flex-col gap-6 text-xl font-normal text-black mt-8">
+            <Link href="#features" onClick={() => setMobileMenuOpen(false)} className="hover:opacity-75">Explore</Link>
+            <Link href="#import" onClick={() => setMobileMenuOpen(false)} className="hover:opacity-75">Integrations</Link>
+            <Link href="#team" onClick={() => setMobileMenuOpen(false)} className="hover:opacity-75">Team</Link>
+            <Link href="https://twitter.com/credify" target="_blank" className="hover:opacity-75 flex items-center gap-1.5">
+              Twitter <ExternalLink className="w-4 h-4" />
+            </Link>
+            <Link href="mailto:support@credify.so" className="hover:opacity-75">Contact</Link>
+            <div className="h-px bg-[#E8E8E9] my-4" />
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="hover:opacity-75">Sign in</Link>
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+              <button className="bg-black text-white w-full py-3 rounded-full text-base font-semibold shadow-xs">
+                Join for free
+              </button>
+            </Link>
+          </nav>
+        </div>
+      )}
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-hidden">
-        {/* Ambient Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/10 blur-[120px] -z-10 animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-600/5 blur-[100px] -z-10" />
-
-        <motion.div 
-          style={{ opacity: heroOpacity, scale: heroScale }}
-          className="max-w-7xl mx-auto flex flex-col items-center text-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-white/5 mb-8"
-          >
-            <Badge className="bg-white text-black hover:bg-white text-[10px] font-bold">ALPHA</Badge>
-            <span className="text-xs font-medium text-white/70">Secure your spot for the Private Beta</span>
-            <ChevronRight className="w-3 h-3 text-white/40" />
-          </motion.div>
-
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-6xl md:text-8xl font-bold tracking-tight mb-8 leading-[0.9]"
-          >
-            Your Knowledge, <br />
-            <span className="text-white/30 italic">Independently</span> <br />
-            Verified.
-          </motion.h1>
-
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-white/50 max-w-2xl mb-12 leading-relaxed"
-          >
-            Credify turns educational content into verifiable career assets. 
-            Track your YouTube learning in real-time and mint blockchain-backed 
-            certificates that employers trust.
-          </motion.p>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center gap-4"
-          >
-            <Button className="h-14 px-10 rounded-full bg-white text-black hover:bg-white/90 text-lg font-bold group">
-              Get Started Free
-              <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Button variant="ghost" className="h-14 px-10 rounded-full border border-white/10 hover:bg-white/5 text-lg font-medium gap-2">
-              <Play className="w-4 h-4 fill-current" />
-              Watch Demo
-            </Button>
-          </motion.div>
-
-          {/* Social Proof */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="mt-24 w-full max-w-4xl"
-          >
-            <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.3em] mb-8">
-              Verified Learning Sources
-            </p>
-            <div className="flex flex-wrap justify-center gap-12 md:gap-20 grayscale opacity-40 hover:opacity-100 transition-opacity">
-              {["MIT OCW", "Stanford Online", "freeCodeCamp", "Harvard CS50", "Google Devs"].map(name => (
-                <span key={name} className="text-xl md:text-2xl font-black italic tracking-tighter whitespace-nowrap">{name}</span>
-              ))}
-            </div>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Proof of Learning Showcase */}
-      <section id="proof-of-learning" className="py-32 px-6 bg-linear-to-b from-[#050505] to-[#0a0a0a]">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader 
-            badge="Intelligent Proof"
-            title="Beyond the Play Button."
-            subtitle="Most platforms only track if a video was opened. Credify verifies if you actually learned."
-          />
-
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="space-y-8"
-            >
-              {[
-                { 
-                  icon: Fingerprint, 
-                  title: "Biometric Presence", 
-                  desc: "Optional eye-tracking and tab-active detection ensure you're actually watching." 
-                },
-                { 
-                  icon: Zap, 
-                  title: "AI Engagement Checks", 
-                  desc: "Sporadic, context-aware prompts confirm your understanding of key concepts." 
-                },
-                { 
-                  icon: BarChart3, 
-                  title: "Retention Scoring", 
-                  desc: "Proprietary algorithms calculate a 'Retention Score' for every hour watched." 
-                }
-              ].map((item, i) => (
-                <div key={i} className="flex gap-6 group">
-                  <div className="w-12 h-12 shrink-0 rounded-2xl glass flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <item.icon className="w-6 h-6 text-white/80" />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold mb-2">{item.title}</h4>
-                    <p className="text-white/40 leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative aspect-square md:aspect-video rounded-[40px] glass overflow-hidden border-white/10 p-4"
-            >
-              <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 via-transparent to-purple-500/10" />
-              <div className="h-full w-full bg-black/40 rounded-[32px] border border-white/5 flex flex-col p-8">
-                {/* Visual Representation of the Extension UI */}
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center shadow-[0_0_20px_rgba(220,38,38,0.3)]">
-                      <Youtube className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold text-white/40 uppercase">Tracking Active</p>
-                      <p className="text-sm font-bold truncate">System Design Interview Guide</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 px-3">
-                    98.2% Focus
-                  </Badge>
-                </div>
-
-                <div className="flex-1 space-y-6">
-                  {[75, 42, 90].map((w, i) => (
-                    <div key={i} className="space-y-2">
-                      <div className="flex justify-between text-[10px] font-bold text-white/40">
-                        <span>COMPONENT {i+1}</span>
-                        <span>{w}%</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                        <motion.div 
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${w}%` }}
-                          transition={{ delay: 0.5 + (i * 0.1), duration: 1 }}
-                          className="h-full bg-white"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
-                  <div className="flex -space-x-3">
-                    {[1,2,3,4].map(i => (
-                      <div key={i} className="w-8 h-8 rounded-full bg-white/10 border-2 border-black" />
-                    ))}
-                  </div>
-                  <p className="text-[10px] font-bold text-white/30 uppercase">Live with 4,209 others</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Verification Section */}
-      <section id="verification" className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader 
-            badge="Security"
-            title="Blockchain-Backed Integrity."
-            subtitle="Every certificate is minted as a unique soulbound token. Permanent, unchangeable, and globally verifiable."
-          />
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard 
-              icon={Globe}
-              title="Global Verification"
-              description="Share your credentials with a simple link. Anyone, anywhere can verify the authenticity on the Ethereum blockchain."
-              delay={0.1}
-            />
-            <FeatureCard 
-              icon={ShieldCheck}
-              title="Tamper-Proof Proofs"
-              description="Once a certificate is issued, the metadata—including hours watched and retention score—is locked in perpetuity."
-              delay={0.2}
-            />
-            <FeatureCard 
-              icon={Fingerprint}
-              title="Soulbound Identity"
-              description="Credentials are tied to your verified identity, preventing transfer or misuse of your hard-earned knowledge."
-              delay={0.3}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-32 px-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-5xl mx-auto glass rounded-[60px] p-12 md:p-24 text-center relative overflow-hidden group"
-        >
-          <div className="absolute inset-0 bg-linear-to-br from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="relative z-10 space-y-8">
-            <div className="w-20 h-20 bg-white rounded-3xl mx-auto flex items-center justify-center shadow-2xl animate-float">
-              <Download className="w-10 h-10 text-black" />
-            </div>
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight">Ready to prove your skills?</h2>
-            <p className="text-white/50 text-xl max-w-xl mx-auto leading-relaxed">
-              Join 12,000+ engineers, designers, and marketers who are building their 
-              on-chain educational profile with Credify.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Button className="h-16 px-12 rounded-full bg-white text-black hover:bg-white/90 text-xl font-bold shadow-2xl">
-                Add to Chrome — It&apos;s Free
-              </Button>
-              <p className="text-sm font-medium text-white/30">Available on Chrome, Edge, and Brave</p>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-32 px-6 max-w-3xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-16">Common Questions</h2>
-        <Accordion type="single" collapsible className="w-full">
-          {[
-            { q: "How does the extension verify learning?", a: "We use a combination of active tab detection, mouse movement patterns, and intelligent AI engagement checks that appear periodically during the video." },
-            { q: "Which YouTube channels are supported?", a: "We support over 50,000 educational channels including MIT OCW, Harvard CS50, Stanford Online, and major developer platforms. New channels are added daily via community voting." },
-            { q: "Are the certificates really on the blockchain?", a: "Yes. Every certificate is minted as an NFT (ERC-721) on Ethereum L2 (Polygon) with the educational metadata stored permanently via IPFS." },
-            { q: "Is my privacy protected?", a: "Absolutely. We only track activity on supported educational URLs. We never record your screen, camera, or audio. Your data is encrypted and you have full control over what is shared." }
-          ].map((item, i) => (
-            <AccordionItem key={i} value={`item-${i}`} className="border-white/5 px-4 rounded-2xl mb-4 glass transition-all hover:bg-white/5">
-              <AccordionTrigger className="text-lg font-bold hover:no-underline">{item.q}</AccordionTrigger>
-              <AccordionContent className="text-white/50 leading-relaxed pb-6">
-                {item.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </section>
-
-      {/* Footer */}
-      <footer className="pt-32 pb-12 px-6 border-t border-white/5 bg-black">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-24">
-          <div className="col-span-2 lg:col-span-2 space-y-6">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <ShieldCheck className="text-black w-5 h-5" />
-              </div>
-              <span className="font-bold text-xl tracking-tight text-white">Credify</span>
-            </Link>
-            <p className="text-white/40 text-sm max-w-xs leading-relaxed">
-              The premium proof-of-learning platform for the modern professional. 
-              Verify your skills, build your credibility.
-            </p>
-            <div className="flex gap-4">
-              {[1,2,3,4].map(i => (
-                <div key={i} className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white hover:text-black transition-all cursor-pointer">
-                  <Globe className="w-4 h-4" />
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {[
-            { title: "Product", links: ["Features", "Security", "Roadmap", "Pricing"] },
-            { title: "Company", links: ["About", "Blog", "Careers", "Press"] },
-            { title: "Resources", links: ["Documentation", "Community", "Support", "API"] }
-          ].map((col, i) => (
-            <div key={i} className="space-y-6">
-              <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">{col.title}</h4>
-              <ul className="space-y-4">
-                {col.links.map(link => (
-                  <li key={link}>
-                    <Link href="#" className="text-sm text-white/50 hover:text-white transition-colors">{link}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-white/5">
-          <p className="text-[10px] font-bold text-white/20 uppercase tracking-widest">
-            © 2026 Credify INC. ALL RIGHTS RESERVED.
+      <section className="max-w-5xl mx-auto px-6 pt-32 pb-16 md:pt-48 md:pb-28 flex flex-col md:flex-row items-center gap-12">
+        <div className="md:w-1/2 flex flex-col items-start text-left">
+          <h1 className="oku-font-serif text-5xl md:text-6xl text-black font-normal leading-[1.1] mb-6">
+            Verify your learning and build your library
+          </h1>
+          <p className="text-[#46474E] text-lg md:text-xl leading-relaxed mb-8 max-w-md">
+            Credify transforms educational video engagement into verified credentials. Track YouTube learning in real-time and mint your sovereign proof-of-learning library.
           </p>
-          <div className="flex gap-8 text-[10px] font-bold text-white/20 uppercase tracking-widest">
-            <Link href="#" className="hover:text-white">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white">Terms of Service</Link>
-            <Link href="#" className="hover:text-white">Cookie Policy</Link>
+          <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+            <Link href="/login" className="w-full sm:w-auto">
+              <button className="bg-black text-white w-full sm:w-auto px-8 py-4 rounded-full text-base font-semibold hover:bg-neutral-800 transition-all shadow-md hover:-translate-y-0.5 active:translate-y-0">
+                Join for free
+              </button>
+            </Link>
+            <Link href="https://chrome.google.com/webstore" target="_blank" className="w-full sm:w-auto">
+              <button className="bg-[#F3F4F4] text-[#131314] w-full sm:w-auto px-8 py-4 rounded-full text-base font-semibold hover:bg-[#E8E8E9] transition-all">
+                Install Extension
+              </button>
+            </Link>
+          </div>
+          <p className="text-sm text-[#8C8C90] mt-5">
+            Already a member? <Link href="/login" className="text-[#46474E] hover:text-black underline transition-colors">Sign in.</Link>
+          </p>
+        </div>
+        <div className="md:w-1/2 flex justify-center md:justify-end relative">
+          <img 
+            src="/images/homepage/bookcase.png" 
+            alt="Credify Library Showcase" 
+            className="w-full max-w-[480px] h-auto object-contain transition-transform duration-700 hover:scale-[1.01]" 
+          />
+        </div>
+      </section>
+
+      {/* Features grid */}
+      <section id="features" className="max-w-5xl mx-auto px-6 py-16 flex flex-col gap-6">
+        
+        {/* Block 1 (Wide) */}
+        <div className="bg-[#F3F4F4] rounded-[28px] overflow-hidden flex flex-col justify-between pt-12 border border-black/2 shadow-xs">
+          <div className="px-6 md:px-12 text-center pb-6">
+            <h2 className="oku-font-serif text-3xl md:text-4xl text-black font-normal mb-3">
+              Track your learning and build your library
+            </h2>
+            <p className="text-[#46474E] text-base md:text-lg max-w-lg mx-auto">
+              Simple to use &amp; easy on the eye – no spreadsheets, manuals or manual logs needed.
+            </p>
+          </div>
+          <div className="flex justify-center -mb-16 md:-mb-28">
+            <img 
+              src="/images/homepage/trackYourReading.png" 
+              alt="Track learning progress" 
+              className="w-[90%] max-w-[860px] h-auto object-contain transition-transform duration-500 hover:scale-[1.02]" 
+            />
+          </div>
+        </div>
+
+        {/* Top Grid (Discover & Goals) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Block 2 (Grid left - Discover) */}
+          <div className="bg-[#F3F4F4] rounded-[28px] overflow-hidden flex flex-col justify-between pt-12 border border-black/2 shadow-xs">
+            <div className="px-6 text-center pb-6">
+              <h2 className="oku-font-serif text-3xl text-black font-normal mb-3">
+                Discover your next tutorial
+              </h2>
+              <p className="text-[#46474E] text-base max-w-sm mx-auto">
+                Connect with peers to see what playlists they&apos;re watching, or explore recommendations from the Credify community.
+              </p>
+            </div>
+            <div className="flex justify-center -mb-56 md:-mb-64">
+              <img 
+                src="/images/homepage/discoverBooks.png" 
+                alt="Discover courses" 
+                className="w-full max-w-[280px] h-auto object-contain transition-transform duration-500 hover:scale-[1.02]" 
+              />
+            </div>
+          </div>
+
+          {/* Block 3 (Grid right - Goals) */}
+          <div className="bg-[#F3F4F4] rounded-[28px] overflow-hidden flex flex-col justify-between pb-12 pt-0 border border-black/2 shadow-xs">
+            <div className="flex justify-center -mt-56 md:-mt-64 mb-6">
+              <img 
+                src="/images/homepage/setReadingGoal.png" 
+                alt="Habit tracking goals" 
+                className="w-full max-w-[280px] h-auto object-contain transition-transform duration-500 hover:scale-[1.02]" 
+              />
+            </div>
+            <div className="px-6 text-center">
+              <h2 className="oku-font-serif text-3xl text-black font-normal mb-3">
+                Kickstart your learning habit
+              </h2>
+              <p className="text-[#46474E] text-base max-w-sm mx-auto">
+                Motivate yourself to stay on track and maintain consistency with a customizable study goal.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Block 4 (Wide - Stats) */}
+        <div className="bg-[#F3F4F4] rounded-[28px] overflow-hidden flex flex-col justify-between pt-12 border border-black/2 shadow-xs">
+          <div className="px-6 md:px-12 text-center pb-6">
+            <h2 className="oku-font-serif text-3xl md:text-4xl text-black font-normal mb-3">
+              See your personalized learning stats
+            </h2>
+            <p className="text-[#46474E] text-base md:text-lg max-w-lg mx-auto">
+              Analyze watch duration, finished playlists, category distributions, and monthly consistency index.
+            </p>
+          </div>
+          <div className="flex justify-center -mb-20 md:-mb-36">
+            <img 
+              src="/images/homepage/unlockStats.png" 
+              alt="Personalized statistics" 
+              className="w-[90%] max-w-[860px] h-auto object-contain transition-transform duration-500 hover:scale-[1.02]" 
+            />
+          </div>
+        </div>
+
+        {/* Bottom Grid (Collections & Reviews) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Block 5 (Grid left - Collections) */}
+          <div className="bg-[#F3F4F4] rounded-[28px] overflow-hidden flex flex-col justify-between pt-12 border border-black/2 shadow-xs">
+            <div className="px-6 text-center pb-6">
+              <h2 className="oku-font-serif text-3xl text-black font-normal mb-3">
+                Create custom collections
+              </h2>
+              <p className="text-[#46474E] text-base max-w-sm mx-auto">
+                Organize your certifications and proofs of learning into curated collections to share with recruiters or peers.
+              </p>
+            </div>
+            <div className="flex justify-center -mb-40 md:-mb-44">
+              <img 
+                src="/images/homepage/createCollections.png" 
+                alt="Create custom collections" 
+                className="w-full max-w-[280px] h-auto object-contain transition-transform duration-500 hover:scale-[1.02]" 
+              />
+            </div>
+          </div>
+
+          {/* Block 6 (Grid right - Reviews) */}
+          <div className="bg-[#F3F4F4] rounded-[28px] overflow-hidden flex flex-col justify-between pt-12 border border-black/2 shadow-xs">
+            <div className="px-6 text-center pb-6">
+              <h2 className="oku-font-serif text-3xl text-black font-normal mb-3">
+                Read community reviews
+              </h2>
+              <p className="text-[#46474E] text-base max-w-sm mx-auto">
+                Discover honest ratings on playlists, channels and courses written by other developers.
+              </p>
+            </div>
+            <div className="flex justify-center -mb-28 md:-mb-36">
+              <img 
+                src="/images/homepage/readReviews.png" 
+                alt="Read course reviews" 
+                className="w-full max-w-[340px] h-auto object-contain transition-transform duration-500 hover:scale-[1.02]" 
+              />
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      {/* Switch / Switch Block (Liberate) */}
+      <section id="import" className="max-w-5xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center gap-12 border-b border-[#E8E8E9] pb-24 mb-20">
+        <div className="md:w-[55%] flex flex-col items-start">
+          <h2 className="oku-font-serif text-4xl md:text-5xl text-black font-normal leading-[1.1] mb-6">
+            You&apos;re in good company
+          </h2>
+          <p className="text-[#46474E] text-lg leading-relaxed max-w-md">
+            Thousands of students are migrating their verification records. Sync your historical YouTube watched history, bookmarks, and certifications. Don&apos;t loathe your progress list –– liberate it.
+          </p>
+        </div>
+        <div className="md:w-[45%] w-full flex flex-col gap-6 relative">
+          
+          {/* Tweet 1 */}
+          <div className="bg-[#F3F4F4] p-6 rounded-2xl border border-[#E8E8E9]/40 max-w-md ml-auto relative md:w-[110%] z-10 shadow-xs hover:border-black/10 transition-colors">
+            <div className="flex items-center gap-3 mb-4">
+              <img src="/images/homepage/aziz.png" alt="Femke avatar" className="w-10 h-10 rounded-full border border-black/5 object-cover" />
+              <div>
+                <h4 className="text-sm font-bold text-black leading-none">fem</h4>
+                <span className="text-xs text-[#8C8C90]">@femke</span>
+              </div>
+              <span className="text-xs text-[#8C8C90] ml-auto">Mar 23</span>
+            </div>
+            <p className="text-[#131314] text-[15px] leading-relaxed">
+              i still think @credify was my favorite new app of 2026. Such a refreshing experience from standard LinkedIn pdf certifications. 🎓
+            </p>
+          </div>
+
+          {/* Tweet 2 */}
+          <div className="bg-[#F3F4F4] p-6 rounded-2xl border border-[#E8E8E9]/40 max-w-md ml-auto md:w-[110%] md:translate-x-[10%] shadow-xs hover:border-black/10 transition-colors">
+            <div className="flex items-center gap-3 mb-4">
+              <img src="/images/homepage/joe.png" alt="Joe avatar" className="w-10 h-10 rounded-full border border-black/5 object-cover" />
+              <div>
+                <h4 className="text-sm font-bold text-black leading-none">Joe Russell</h4>
+                <span className="text-xs text-[#8C8C90]">@Joebob</span>
+              </div>
+              <span className="text-xs text-[#8C8C90] ml-auto">Feb 21</span>
+            </div>
+            <p className="text-[#131314] text-[15px] leading-relaxed">
+              Credify is really lovely and simple. It works for people who have barely coded in years as well as those who consume more playlists than food.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* More Info Section */}
+      <section className="max-w-5xl mx-auto px-6 pb-16 md:pb-24 border-b border-[#E8E8E9] mb-20">
+        <div className="flex flex-col gap-12">
+          {/* Column 1 */}
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+            <div className="md:w-[30%]">
+              <h4 className="text-sm font-bold text-[#8C8C90] uppercase tracking-wider">Looking to switch?</h4>
+            </div>
+            <div className="md:w-[70%] text-left">
+              <h3 className="oku-font-serif text-2xl text-black font-normal mb-2">Import from YouTube &amp; Github</h3>
+              <p className="text-[#46474E] text-base leading-relaxed">
+                There&apos;s no need to start over -- our automated sync tools can import your learning history, bookmarks, and watched playlists in seconds. No fuss.
+              </p>
+            </div>
+          </div>
+
+          {/* Column 2 */}
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+            <div className="md:w-[30%]">
+              <h4 className="text-sm font-bold text-[#8C8C90] uppercase tracking-wider">Data &amp; Privacy</h4>
+            </div>
+            <div className="md:w-[70%] text-left">
+              <h3 className="oku-font-serif text-2xl text-black font-normal mb-2">Retain control of your data</h3>
+              <p className="text-[#46474E] text-base leading-relaxed">
+                Your data is your business, not ours. We&apos;ll never sell it to third parties and we don&apos;t use invasive tracking. Since you&apos;re in charge, you are free to export your data and credentials at any time.
+              </p>
+            </div>
+          </div>
+
+          {/* Column 3 */}
+          <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+            <div className="md:w-[30%]">
+              <h4 className="text-sm font-bold text-[#8C8C90] uppercase tracking-wider">Is this sustainable?</h4>
+            </div>
+            <div className="md:w-[70%] text-left">
+              <h3 className="oku-font-serif text-2xl text-black font-normal mb-2">We are member supported</h3>
+              <p className="text-[#46474E] text-base leading-relaxed">
+                We choose to charge our members directly for premium certificate custom designs and API extensions so that we profit when we make you happy instead of when we show you ads.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Meet the team section */}
+      <section id="team" className="max-w-5xl mx-auto px-6 pb-24 flex flex-col items-center text-center">
+        <h2 className="oku-font-serif text-4xl md:text-5xl text-black font-normal leading-[1.1] mb-6">
+          Meet the team
+        </h2>
+        <p className="text-[#46474E] text-lg leading-relaxed max-w-2xl mb-12">
+          As three friends scattered throughout Europe, we were looking for a way to discover great tutorials and track our technical growth. Nothing cut the mustard, so we took the challenge on. We work smart and take pride in our craft.
+        </p>
+        
+        {/* Team Avatars */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 w-full max-w-3xl mt-6">
+          {/* Team Member 1 */}
+          <div className="flex flex-col items-center text-center">
+            <div className="w-[124px] h-[124px] rounded-full overflow-hidden shadow-xs border border-neutral-200 mb-4 select-none">
+              <img src="/images/homepage/yav.png" alt="Yavor Punchev &amp; Fuji" className="w-full h-full object-cover" />
+            </div>
+            <h4 className="font-semibold text-lg text-black mb-1">Yavor Punchev &amp; Fuji</h4>
+            <span className="text-sm text-[#8C8C90]">Sofia, Bulgaria</span>
+          </div>
+
+          {/* Team Member 2 */}
+          <div className="flex flex-col items-center text-center">
+            <div className="w-[124px] h-[124px] rounded-full overflow-hidden shadow-xs border border-neutral-200 mb-4 select-none">
+              <img src="/images/homepage/joe.png" alt="Joe Alcorn" className="w-full h-full object-cover" />
+            </div>
+            <h4 className="font-semibold text-lg text-black mb-1">Joe Alcorn</h4>
+            <span className="text-sm text-[#8C8C90]">London, United Kingdom</span>
+          </div>
+
+          {/* Team Member 3 */}
+          <div className="flex flex-col items-center text-center">
+            <div className="w-[124px] h-[124px] rounded-full overflow-hidden shadow-xs border border-neutral-200 mb-4 select-none">
+              <img src="/images/homepage/aziz.png" alt="Aziz Firat" className="w-full h-full object-cover" />
+            </div>
+            <h4 className="font-semibold text-lg text-black mb-1">Aziz Firat</h4>
+            <span className="text-sm text-[#8C8C90]">Oslo, Norway</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Block */}
+      <footer className="relative bg-[#F6F6F6] pt-12 overflow-hidden border-t border-[#E8E8E9]">
+        <Wave className="w-full h-auto text-[#FAF9F7] bg-[#F6F6F6] -mt-12" />
+
+        {/* Floating Books - exact layout */}
+        <figure className="absolute top-[140px] left-[14vw] animate-float-book-1 hidden md:block select-none pointer-events-none">
+          <img src="/images/homepage/bookOne.png" width={92} height={105} alt="Book floating around" />
+        </figure>
+        <figure className="absolute bottom-[180px] left-[7vw] animate-float-book-2 hidden md:block select-none pointer-events-none">
+          <img src="/images/homepage/bookTwo.png" width={110} height={120} alt="Book floating around" />
+        </figure>
+        <figure className="absolute top-[240px] right-[7vw] animate-float-book-3 hidden md:block select-none pointer-events-none">
+          <img src="/images/homepage/bookThree.png" width={120} height={100} alt="Book floating around" />
+        </figure>
+
+        {/* CTA section inside footer */}
+        <div className="max-w-[700px] mx-auto text-center py-20 px-6 relative z-10">
+          <h2 className="oku-font-serif text-4xl md:text-5xl text-black font-normal mb-4">
+            Ready to join us?
+          </h2>
+          <p className="text-[#46474E] text-lg max-w-[500px] mx-auto mb-8 leading-relaxed">
+            Credify is the companion app for your learning. Become a member for free to track, rate &amp; review your favorite educational playlists with a community of others.
+          </p>
+          <Link href="/login">
+            <button className="bg-black text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-neutral-800 transition-all shadow-md hover:-translate-y-0.5 active:translate-y-0">
+              Create a free account
+            </button>
+          </Link>
+        </div>
+
+        {/* Bottom links and copyright */}
+        <div className="max-w-5xl mx-auto px-6 py-12 relative border-t border-[#E8E8E9] flex flex-col md:flex-row justify-between items-center gap-6">
+          
+          {/* Dog tail swinging fuji */}
+          <div className="absolute bottom-2.5 right-[-150px] hidden xl:block select-none pointer-events-none w-[270px] h-[240px] overflow-hidden">
+            <img 
+              src="/images/homepage/fuji.png" 
+              alt="Fuji tail wagging" 
+              className="animate-tail-swing w-full h-full object-contain" 
+            />
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-6 text-[#46474E] font-medium text-sm z-10">
+            <Link href="#features" className="hover:text-black transition-colors">Explore</Link>
+            <Link href="#import" className="hover:text-black transition-colors">Integrations</Link>
+            <Link href="#team" className="hover:text-black transition-colors">Team</Link>
+            <Link href="https://twitter.com/credify" target="_blank" className="hover:text-black transition-colors">Twitter</Link>
+            <Link href="mailto:support@credify.so" className="hover:text-black transition-colors">Contact</Link>
+          </div>
+
+          <div className="text-[#8C8C90] text-sm z-10">
+            Copyright &copy; 2026 Credify. All rights reserved.
           </div>
         </div>
       </footer>
+
     </div>
   );
 }

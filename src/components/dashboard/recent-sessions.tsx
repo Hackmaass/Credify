@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Youtube, ExternalLink, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
+import { ExternalLink, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
+import { Youtube } from "@/components/ui/youtube-icon";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -12,7 +13,7 @@ const sessions = [
     title: "Advanced TypeScript Patterns",
     platform: "YouTube",
     duration: "45m",
-    timestamp: "2 hours ago",
+    timestamp: "2 HOURS AGO",
     status: "Verified",
     category: "Software Engineering",
   },
@@ -21,7 +22,7 @@ const sessions = [
     title: "Understanding Next.js 15 Server Components",
     platform: "YouTube",
     duration: "1h 20m",
-    timestamp: "5 hours ago",
+    timestamp: "5 HOURS AGO",
     status: "Verified",
     category: "Web Development",
   },
@@ -30,7 +31,7 @@ const sessions = [
     title: "Machine Learning Foundations",
     platform: "Coursera",
     duration: "2h 15m",
-    timestamp: "Yesterday",
+    timestamp: "YESTERDAY",
     status: "Verified",
     category: "AI/ML",
   },
@@ -39,7 +40,7 @@ const sessions = [
     title: "Product Management Strategy",
     platform: "YouTube",
     duration: "30m",
-    timestamp: "Yesterday",
+    timestamp: "YESTERDAY",
     status: "Pending",
     category: "Business",
   },
@@ -47,11 +48,11 @@ const sessions = [
 
 export function RecentSessions() {
   return (
-    <Card className="border-white/5 bg-white/[0.03] backdrop-blur-xl">
+    <Card>
       <CardHeader>
-        <CardTitle className="text-white">Recent Sessions</CardTitle>
-        <CardDescription className="text-muted-foreground">
-          Your latest educational activities and their verification status.
+        <CardTitle>RECENT SESSIONS</CardTitle>
+        <CardDescription>
+          Your latest educational activities and their verification status on the network.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -59,45 +60,41 @@ export function RecentSessions() {
           {sessions.map((session, index) => (
             <motion.div
               key={session.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="group flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] p-4 transition-colors hover:bg-white/[0.05]"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="group flex items-center justify-between rounded-2xl border border-white/[0.03] bg-white/[0.01] p-5 transition-all hover:bg-white/[0.04]"
             >
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/10 text-red-500">
-                  <Youtube className="h-5 w-5" />
+              <div className="flex items-center gap-5">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/[0.03] text-white/40 group-hover:bg-white group-hover:text-black transition-all duration-500">
+                  <Youtube className="h-6 w-6" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">
+                  <h4 className="text-base font-bold text-white tracking-tight">
                     {session.title}
                   </h4>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" /> {session.duration}
+                  <div className="flex items-center gap-4 mt-1">
+                    <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
+                      <Clock className="h-3.5 w-3.5" /> {session.duration}
                     </span>
-                    <span className="text-xs text-muted-foreground">•</span>
-                    <span className="text-xs text-muted-foreground">{session.timestamp}</span>
-                    <Badge variant="outline" className="h-5 text-[10px] border-white/10 bg-white/5 text-muted-foreground">
+                    <span className="text-[10px] text-white/10">•</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20">{session.timestamp}</span>
+                    <Badge variant="outline" className="h-5 px-2">
                       {session.category}
                     </Badge>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-6">
                 <Badge 
                   variant={session.status === "Verified" ? "default" : "secondary"}
-                  className={
-                    session.status === "Verified" 
-                      ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border-emerald-500/20" 
-                      : "bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 border-amber-500/20"
-                  }
+                  className="px-3"
                 >
-                  {session.status === "Verified" && <CheckCircle2 className="mr-1 h-3 w-3" />}
+                  {session.status === "Verified" && <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />}
                   {session.status}
                 </Badge>
-                <button className="rounded-full p-2 text-muted-foreground hover:bg-white/10 hover:text-white transition-colors">
-                  <ExternalLink className="h-4 w-4" />
+                <button className="rounded-full p-2.5 text-white/20 hover:bg-white/[0.05] hover:text-white transition-all">
+                  <ExternalLink className="h-5 w-5" />
                 </button>
               </div>
             </motion.div>

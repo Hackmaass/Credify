@@ -4,16 +4,15 @@ import React from "react";
 import { 
   Award, 
   Download, 
-  ExternalLink,
   ShieldCheck,
   QrCode,
   Share2,
   Database,
   Link as LinkIcon,
-  CheckCircle2,
   Calendar,
   Clock,
-  Hexagon
+  Hexagon,
+  ArrowRight
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -26,38 +25,38 @@ const certificates = [
   {
     id: "CRED-782-X92",
     course: "Full-Stack React Development",
-    platform: "Credify Certified",
-    date: "May 12, 2026",
+    platform: "CREDIFY PROTOCOL",
+    date: "MAY 12, 2026",
     hours: 42,
     blockchainHash: "0x7a2...f4e1",
     score: 98,
     nftId: "#8821",
     status: "Verified",
-    rarity: "Legendary",
+    rarity: "LEGENDARY",
   },
   {
     id: "CRED-441-B12",
     course: "Advanced System Design",
-    platform: "Credify Certified",
-    date: "April 28, 2026",
+    platform: "CREDIFY PROTOCOL",
+    date: "APRIL 28, 2026",
     hours: 28,
     blockchainHash: "0x3b1...c9d2",
     score: 94,
     nftId: "#4502",
     status: "Verified",
-    rarity: "Epic",
+    rarity: "EPIC",
   },
   {
     id: "CRED-129-L05",
     course: "Blockchain Fundamentals",
-    platform: "Credify Certified",
-    date: "March 15, 2026",
+    platform: "CREDIFY PROTOCOL",
+    date: "MARCH 15, 2026",
     hours: 15,
     blockchainHash: "0x9d5...a2b8",
     score: 89,
     nftId: "#1209",
     status: "Verified",
-    rarity: "Rare",
+    rarity: "RARE",
   }
 ];
 
@@ -66,40 +65,47 @@ const container = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.1,
+      delayChildren: 0.2
     }
   }
 };
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
+const item: any = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
 };
 
 export default function CertificateVault() {
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-16 pb-24 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-            Certificate Vault
-            <Badge variant="outline" className="text-[10px] uppercase tracking-widest bg-blue-500/10 text-blue-400 border-blue-500/20">
-              {certificates.length} Assets
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-3"
+          >
+            <Badge variant="outline" className="px-3 py-1">
+              {certificates.length} ASSETS MINTED
             </Badge>
+          </motion.div>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white leading-none">
+            ASSET VAULT
           </h1>
-          <p className="text-muted-foreground">
-            Manage your blockchain-backed educational credentials and NFT badges.
+          <p className="text-xl text-white/40 font-medium max-w-2xl">
+            Manage your blockchain-backed educational credentials and non-transferable assets.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-white/5 bg-white/5 hover:bg-white/10 text-white h-11">
-            <Share2 className="w-4 h-4 mr-2" />
-            Share Profile
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" className="h-14 px-8 rounded-2xl group">
+            <Share2 className="w-5 h-5 mr-3 text-white/20 group-hover:text-white transition-colors" />
+            SHARE PROFILE
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white h-11 px-6 shadow-lg shadow-blue-600/20">
-            <Award className="w-4 h-4 mr-2" />
-            Claim New
+          <Button className="bg-white text-black hover:bg-white/90 h-14 px-10 rounded-2xl font-black shadow-2xl transition-all hover:scale-105 active:scale-95">
+            <Award className="w-5 h-5 mr-3" />
+            MINT NEW ASSET
           </Button>
         </div>
       </div>
@@ -109,92 +115,96 @@ export default function CertificateVault() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8"
       >
         {certificates.map((cert) => (
           <motion.div key={cert.id} variants={item}>
-            <Card className="group relative overflow-hidden border-white/5 bg-white/[0.03] backdrop-blur-xl transition-all hover:border-blue-500/30 hover:bg-white/[0.05]">
+            <Card className="group relative overflow-hidden h-full flex flex-col hover:bg-white/[0.04] transition-all duration-700">
               {/* Rarity Indicator */}
               <div className={cn(
-                "absolute top-0 right-0 px-4 py-1 text-[10px] font-bold uppercase tracking-widest rounded-bl-xl z-10",
-                cert.rarity === "Legendary" ? "bg-amber-500 text-black" :
-                cert.rarity === "Epic" ? "bg-purple-500 text-white" : "bg-blue-500 text-white"
+                "absolute top-6 right-6 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] rounded-full z-10",
+                cert.rarity === "LEGENDARY" ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" :
+                cert.rarity === "EPIC" ? "bg-purple-500/10 text-purple-500 border border-purple-500/20" : 
+                "bg-blue-500/10 text-blue-500 border border-blue-500/20"
               )}>
                 {cert.rarity}
               </div>
 
-              {/* Card Header with Glass Design */}
-              <CardHeader className="relative pb-4">
-                <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-blue-500/10 to-transparent -z-10" />
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 border border-white/10 shadow-inner group-hover:scale-110 transition-transform">
-                    <Hexagon className={cn(
-                      "w-8 h-8",
-                      cert.rarity === "Legendary" ? "text-amber-400" :
-                      cert.rarity === "Epic" ? "text-purple-400" : "text-blue-400"
-                    )} />
-                    <Award className="absolute w-4 h-4 text-white" />
+              {/* Card Header */}
+              <CardHeader className="relative pb-8 pt-10">
+                <div className="flex justify-between items-start mb-8">
+                  <div className="relative">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/[0.03] border border-white/[0.05] group-hover:scale-110 group-hover:bg-white group-hover:text-black transition-all duration-700 shadow-2xl">
+                      <Hexagon className={cn(
+                        "w-10 h-10",
+                        cert.rarity === "LEGENDARY" ? "text-amber-500 group-hover:text-black" :
+                        cert.rarity === "EPIC" ? "text-purple-500 group-hover:text-black" : 
+                        "text-blue-500 group-hover:text-black"
+                      )} />
+                      <Award className="absolute w-5 h-5" />
+                    </div>
+                    <div className="absolute -inset-4 bg-white/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10" />
                   </div>
                   <div className="text-right">
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-tighter">Credibility Score</div>
-                    <div className="text-lg font-bold text-emerald-400">{cert.score}</div>
+                    <div className="text-[10px] text-white/20 font-black uppercase tracking-[0.3em] mb-1">SCORE</div>
+                    <div className="text-3xl font-black text-white group-hover:text-glow transition-all">{cert.score}</div>
                   </div>
                 </div>
-                <CardTitle className="text-xl leading-tight text-white group-hover:text-blue-400 transition-colors">
+                <CardTitle className="text-2xl font-black leading-tight text-white mb-2">
                   {cert.course}
                 </CardTitle>
-                <CardDescription className="flex items-center gap-2 text-muted-foreground mt-1">
-                  <Database className="w-3 h-3" /> {cert.platform}
+                <CardDescription className="flex items-center gap-2 text-[11px] font-black text-white/20 uppercase tracking-widest mt-3">
+                  <Database className="w-3.5 h-3.5" /> {cert.platform}
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <div className="text-[10px] text-muted-foreground uppercase flex items-center gap-1">
-                      <Calendar className="w-3 h-3" /> Issued
+              <CardContent className="space-y-8 flex-1">
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <div className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5" /> ISSUED
                     </div>
-                    <div className="text-sm font-medium text-white">{cert.date}</div>
+                    <div className="text-sm font-bold text-white tracking-tight">{cert.date}</div>
                   </div>
-                  <div className="space-y-1 text-right">
-                    <div className="text-[10px] text-muted-foreground uppercase flex items-center gap-1 justify-end">
-                      <Clock className="w-3 h-3" /> Effort
+                  <div className="space-y-2 text-right">
+                    <div className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em] flex items-center gap-2 justify-end">
+                      <Clock className="w-3.5 h-3.5" /> EFFORT
                     </div>
-                    <div className="text-sm font-medium text-white">{cert.hours} Hours</div>
+                    <div className="text-sm font-bold text-white tracking-tight">{cert.hours} HOURS</div>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-2">
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className="text-muted-foreground flex items-center gap-1">
-                      <LinkIcon className="w-3 h-3" /> Blockchain Hash
+                <div className="p-5 rounded-[24px] bg-white/[0.02] border border-white/[0.03] space-y-4 group-hover:bg-white/[0.05] transition-colors">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20 flex items-center gap-2">
+                      <LinkIcon className="w-3.5 h-3.5" /> HASH
                     </span>
-                    <span className="text-blue-400 font-mono">{cert.blockchainHash}</span>
+                    <span className="text-[11px] font-bold text-blue-400 font-mono tracking-tighter">{cert.blockchainHash}</span>
                   </div>
-                  <div className="flex justify-between items-center text-[10px]">
-                    <span className="text-muted-foreground flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3" /> NFT Token ID
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/20 flex items-center gap-2">
+                      <ShieldCheck className="w-3.5 h-3.5" /> TOKEN
                     </span>
-                    <span className="text-white font-mono">{cert.nftId}</span>
+                    <span className="text-[11px] font-bold text-white font-mono tracking-tighter">{cert.nftId}</span>
                   </div>
                 </div>
               </CardContent>
 
-              <CardFooter className="grid grid-cols-2 gap-2 pt-2">
-                <Button variant="ghost" className="bg-white/5 border border-white/5 text-xs text-white hover:bg-white/10 h-10">
-                  <Download className="w-3.5 h-3.5 mr-2" />
-                  Assets
+              <CardFooter className="grid grid-cols-2 gap-4 p-8 pt-4">
+                <Button variant="outline" className="h-12 rounded-xl text-[10px] font-black uppercase tracking-widest group/btn">
+                  <Download className="w-4 h-4 mr-2 text-white/20 group-hover/btn:text-white" />
+                  ASSETS
                 </Button>
                 <Link href={`/verify/${cert.id}`} className="w-full">
-                  <Button className="w-full bg-blue-600/10 border border-blue-500/20 text-blue-400 hover:bg-blue-600/20 text-xs h-10 group/btn">
-                    <QrCode className="w-3.5 h-3.5 mr-2 group-hover/btn:scale-110 transition-transform" />
-                    Verify
+                  <Button className="w-full h-12 rounded-xl text-[10px] font-black uppercase tracking-widest bg-white/[0.05] hover:bg-white/10 text-white border-white/[0.05] group/btn">
+                    VERIFY
+                    <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all" />
                   </Button>
                 </Link>
               </CardFooter>
 
-              {/* Hover Glow Effect */}
-              <div className="absolute -inset-px bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+              {/* Ambient Glow */}
+              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-white/[0.02] blur-[100px] rounded-full group-hover:bg-white/[0.05] transition-all duration-700" />
             </Card>
           </motion.div>
         ))}
