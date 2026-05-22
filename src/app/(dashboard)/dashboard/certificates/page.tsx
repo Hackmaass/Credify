@@ -103,10 +103,12 @@ export default function CertificateVault() {
             <Share2 className="w-5 h-5 mr-3 text-white/20 group-hover:text-white transition-colors" />
             SHARE PROFILE
           </Button>
-          <Button className="bg-white text-black hover:bg-white/90 h-14 px-10 rounded-2xl font-black shadow-2xl transition-all hover:scale-105 active:scale-95">
-            <Award className="w-5 h-5 mr-3" />
-            MINT NEW ASSET
-          </Button>
+          <Link href="/dashboard/generator">
+            <Button className="bg-white text-black hover:bg-white/90 h-14 px-10 rounded-2xl font-black shadow-2xl transition-all hover:scale-105 active:scale-95">
+              <Award className="w-5 h-5 mr-3" />
+              MINT NEW ASSET
+            </Button>
+          </Link>
         </div>
       </div>
 

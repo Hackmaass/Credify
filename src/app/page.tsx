@@ -85,10 +85,9 @@ export default function LandingPage() {
       {/* Floating Navbar */}
       <header className={`fixed top-0 left-0 right-0 h-20 z-50 transition-all duration-300 flex items-center justify-center ${scrolled ? 'bg-[#FAF9F7] dark:bg-[#0A0A0A]/95 border-b border-[#E8E8E9] dark:border-white/10 shadow-sm backdrop-blur-md' : 'bg-transparent'}`}>
         <div className="w-full max-w-5xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center transition-transform group-hover:scale-105 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-              <ShieldCheck className="text-white w-4.5 h-4.5" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105 overflow-hidden">
+              <img src="/images/homepage/logo.png" alt="Credify Logo" className="w-full h-full object-contain dark:invert-0 invert" />
             </div>
             <span className="font-bold text-xl tracking-tight text-black dark:text-white">Credify</span>
           </Link>
