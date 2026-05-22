@@ -176,9 +176,9 @@ export default function LandingPage() {
         </div>
         <div className="md:w-1/2 flex justify-center md:justify-end relative">
           <img 
-            src="/images/homepage/bookcase.png" 
-            alt="Credify Dashboard Preview" 
-            className="w-full max-w-[480px] h-auto object-contain transition-transform duration-700 hover:scale-[1.01]" 
+            src="/images/homepage/hero-illustration.png" 
+            alt="Credify Architecture Diagram" 
+            className="w-full max-w-[560px] h-auto object-contain transition-transform duration-700 hover:scale-[1.01] dark:invert" 
           />
         </div>
       </section>
