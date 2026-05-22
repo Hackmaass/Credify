@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   Loader2,
   AlertCircle,
-  Youtube,
+  Play,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
@@ -108,7 +108,7 @@ function ClaimContent() {
                   <CardTitle className="text-xl font-black truncate">{course}</CardTitle>
                   {videoId && (
                     <CardDescription className="flex items-center gap-1.5 mt-1">
-                      <Youtube className="w-3 h-3" />
+                      <Play className="w-3 h-3" />
                       <span className="font-mono text-[10px]">{videoId}</span>
                     </CardDescription>
                   )}

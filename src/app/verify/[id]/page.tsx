@@ -14,7 +14,7 @@ import {
   QrCode,
   Hexagon,
   Share2,
-  Youtube,
+  Play,
   BarChart2,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -104,7 +104,7 @@ function VerificationContent() {
                 </CardTitle>
                 {videoId && (
                   <div className="flex items-center justify-center gap-2 mt-2">
-                    <Youtube className="w-4 h-4 text-white/20" />
+                    <Play className="w-4 h-4 text-white/20" />
                     <span className="text-xs font-mono text-white/30">{videoId}</span>
                   </div>
                 )}
