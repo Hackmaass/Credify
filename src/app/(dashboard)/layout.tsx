@@ -67,8 +67,8 @@ export default function DashboardLayout({
         
         <div className="relative z-10 p-10">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 shadow-[0_0_20px_rgba(255,255,255,0.1)] overflow-hidden">
-              <img src="/images/homepage/logo.png" alt="Credify Logo" className="w-full h-full object-contain dark:invert-0 invert" />
+            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center transition-all group-hover:scale-110 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              <ShieldCheck className="text-black w-6 h-6" />
             </div>
             <span className="font-bold text-2xl tracking-tighter text-white">Credify</span>
           </Link>

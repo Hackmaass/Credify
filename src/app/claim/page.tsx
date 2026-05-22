@@ -13,11 +13,23 @@ import {
   Play,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useAuth } from "@/hooks/use-auth";
+
+function deriveName(user: { displayName?: string | null; email?: string | null } | null): string {
+  if (user?.displayName) return user.displayName;
+  if (user?.email) {
+    const local = user.email.split("@")[0];
+    return local.replace(/[._]/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  }
+  return "Credify Learner";
+}
 
 type MintState = "idle" | "minting" | "success" | "error";
 
 function ClaimContent() {
   const params = useSearchParams();
+  const { user } = useAuth();
+  const recipientName = deriveName(user);
 
   const wallet = params.get("wallet") ?? "";
   const score = Number(params.get("score") ?? 0);
@@ -31,6 +43,14 @@ function ClaimContent() {
   const [tokenId, setTokenId] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
   const [isDemo, setIsDemo] = useState(false);
+
+  // Persist wallet so the dashboard can read it without needing the extension
+  useEffect(() => {
+    if (wallet && wallet.startsWith("0x") && wallet.length === 42) {
+      localStorage.setItem("credify_wallet", wallet);
+      sessionStorage.setItem("credify_wallet", wallet);
+    }
+  }, [wallet]);
 
   const isValid =
     wallet.startsWith("0x") && wallet.length === 42 && score > 0 && course.length > 0;
@@ -212,10 +232,16 @@ function ClaimContent() {
               )}
 
               <a
+                href={`/dashboard/generator?name=${encodeURIComponent(recipientName)}&course=${encodeURIComponent(course)}&score=${score}&tokenId=${tokenId}&wallet=${encodeURIComponent(wallet)}&completion=${completion}&videoId=${encodeURIComponent(videoId)}`}
+                className="flex items-center justify-center w-full h-14 rounded-2xl bg-white text-black font-black text-[11px] uppercase tracking-widest hover:bg-white/90 transition-all"
+              >
+                View Certificate →
+              </a>
+              <a
                 href={`/verify/${tokenId}?completion=${completion}&videoId=${encodeURIComponent(videoId)}&course=${encodeURIComponent(course)}&score=${score}&wallet=${encodeURIComponent(wallet)}`}
                 className="flex items-center justify-center w-full h-14 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-[11px] font-black uppercase tracking-widest text-white/60 hover:text-white"
               >
-                View Certificate →
+                View Blockchain Proof →
               </a>
             </div>
           )}
